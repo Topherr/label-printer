@@ -1,5 +1,12 @@
 # Changelog
 
+## label-printer/v11
+
+- **Colour bars now print** even when the print dialog's "Background graphics" box is off.
+  The family bar and jacket stripe are CSS background colours, which browsers strip from
+  printouts by default; `print-color-adjust: exact` on the sheet forces them to print. (The
+  QR and cut lines already printed, being foreground paths/borders.)
+
 ## label-printer/v10
 
 - **Descriptor moves to a top eyebrow.** A descriptor like `keystone` / `coupler` now renders

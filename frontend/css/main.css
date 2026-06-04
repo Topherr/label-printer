@@ -97,6 +97,9 @@ button{ font-family:inherit; cursor:pointer; }
   transform:scale(var(--zoom)); transform-origin:top left;
   display:grid; justify-content:center; align-content:center;
   padding:var(--margin); position:relative;
+  /* print the colour bars/stripes even when the print dialog's
+     "Background graphics" box is off (inherited by all descendants) */
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;
 }
 .pagetag{
   position:absolute; bottom:2mm; right:3mm; font-size:2.6mm; color:#b7c4c4;
