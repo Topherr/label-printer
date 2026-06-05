@@ -88,7 +88,7 @@ let calibrate = false; // true = show the printer-calibration ruler instead of l
 function readState(){
   return {
     text: el.labels.value,
-    w: clamp(+el.w.value || 90, 10, 200),
+    w: clamp(+el.w.value || 96, 10, 200),
     h: clamp(+el.h.value || 34, 10, 287),
     bleed: clamp(+el.bleed.value || 0, 0, 10),
     copies: clamp(+el.copies.value || 1, 1, 200),
@@ -98,7 +98,7 @@ function readState(){
 }
 function applyState(s){
   el.labels.value = s.text ?? SEED.join('\n');
-  el.w.value = s.w ?? 90; el.h.value = s.h ?? 34;
+  el.w.value = s.w ?? 96; el.h.value = s.h ?? 34;
   el.bleed.value = s.bleed ?? 3; el.copies.value = s.copies ?? 1;
   el.mono.checked = !!s.mono; el.bold.checked = s.bold !== false;
   el.upper.checked = !!s.upper; el.border.checked = !!s.border;
