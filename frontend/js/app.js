@@ -177,7 +177,9 @@ function render(){
   save(s);
 
   const bleed = s.bleed, gap = Math.max(2, bleed * 2);
-  const trimW = s.w + SLOT * 2;                 // add a slot tab on each side
+  // The entered width/height ARE the printed/cut size (true size). The full-bleed colour
+  // bars (each with a ~SLOT-wide tab that seats into the holder) live inside that size.
+  const trimW = s.w;
   const cellW = trimW + bleed * 2, cellH = s.h + bleed * 2;
 
   if (calibrate){ renderCalibration(s, trimW); return; }
@@ -375,8 +377,8 @@ function renderCalibration(s, trimW){
     ` Then measure with a ruler — the box should be exactly <b>100&nbsp;×&nbsp;40&nbsp;mm</b>.` +
     ` If it's off, set the printer scale to <b>100&nbsp;÷&nbsp;measured&nbsp;width</b>` +
     ` (e.g. 96&nbsp;mm&nbsp;→&nbsp;~104%) and reprint to confirm.<br>` +
-    `Your labels print at <b>${trimW}&nbsp;×&nbsp;${s.h}&nbsp;mm</b>` +
-    ` (${s.w}&nbsp;mm content + 2&nbsp;×&nbsp;${SLOT}&nbsp;mm slot tabs).</div>`;
+    `Your labels print at <b>${trimW}&nbsp;×&nbsp;${s.h}&nbsp;mm</b> — true size` +
+    ` (the colour bars include a ~${SLOT}&nbsp;mm slot tab each side, within that width).</div>`;
   sheet.appendChild(cal);
   frame.appendChild(sheet);
   el.sheets.appendChild(frame);

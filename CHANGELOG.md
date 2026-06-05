@@ -1,5 +1,12 @@
 # Changelog
 
+## label-printer/v14
+
+- **Fixed: Width/Height are the true printed/cut size again.** v12 had added the 10mm slot
+  tabs *on top of* the width, so a "90 mm" label was actually cutting at 110 mm. Now what you
+  enter is exactly what prints; the full-bleed colour bars (each with a ~10 mm slot tab) sit
+  *inside* that width. Side effect: back to 12 labels per A4 sheet at 90 × 34 mm.
+
 ## label-printer/v13
 
 - **Calibration ruler.** A new **Ruler** button swaps the preview for a printable 100 × 40 mm
