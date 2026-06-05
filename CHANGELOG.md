@@ -1,5 +1,12 @@
 # Changelog
 
+## label-printer/v12
+
+- **Slot tabs + full-bleed colour bars.** Each label gains a 10mm tab on each side (the card
+  is `width + 20mm`) that seats into the bin-slot holder, and the family bar / jacket stripe
+  now run **full-bleed to the edges** — no white gap — with ~10mm seating in the slot and
+  ~4mm visible. Note: at 90mm content the card becomes 110mm, so labels print one per A4 row.
+
 ## label-printer/v11
 
 - **Colour bars now print** even when the print dialog's "Background graphics" box is off.

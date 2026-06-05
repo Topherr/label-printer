@@ -3,7 +3,9 @@
 'use strict';
 
 const PAGE_W = 210, PAGE_H = 297, MARGIN = 6; // A4 + safe margin, mm
-const SAFE = 3;                                // horizontal margin hidden by the bin-slot lip, mm
+const SAFE = 3;                                // bottom margin hidden by the bin-slot lip, mm
+const SLOT = 10;                               // side tab each side that seats into the slot, mm
+const BARW = SLOT + 4;                         // colour-bar width: the slot tab + a visible strip, mm
 const PX_PER_MM = 96 / 25.4;                   // CSS reference (1in = 96px = 25.4mm)
 const STORE = 'label-printer/v1';
 
@@ -174,7 +176,8 @@ function render(){
   save(s);
 
   const bleed = s.bleed, gap = Math.max(2, bleed * 2);
-  const cellW = s.w + bleed * 2, cellH = s.h + bleed * 2;
+  const trimW = s.w + SLOT * 2;                 // add a slot tab on each side
+  const cellW = trimW + bleed * 2, cellH = s.h + bleed * 2;
   const cols = Math.max(1, Math.floor((PAGE_W - 2 * MARGIN + gap) / (cellW + gap)));
   const rows = Math.max(1, Math.floor((PAGE_H - 2 * MARGIN + gap) / (cellH + gap)));
   const per = cols * rows;
@@ -205,7 +208,7 @@ function render(){
     sheet.className = 'sheet';
     sheet.style.cssText =
       `--margin:${MARGIN}mm;--cellw:${cellW}mm;--cellh:${cellH}mm;--bleed:${bleed}mm;` +
-      `--mark:${Math.max(2, bleed)}mm;--safe:${SAFE}mm;--qr:${(s.h * 0.6).toFixed(2)}mm;` +
+      `--mark:${Math.max(2, bleed)}mm;--safe:${SAFE}mm;--qr:${(s.h * 0.6).toFixed(2)}mm;--barw:${BARW}mm;` +
       `grid-template-columns:repeat(${cols},var(--cellw));gap:${gap}mm;`;
 
     for (const lab of items.slice(p * per, p * per + per)){

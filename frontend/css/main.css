@@ -112,11 +112,13 @@ button{ font-family:inherit; cursor:pointer; }
 .lbl{
   position:absolute; inset:var(--bleed);
   display:flex; align-items:stretch; overflow:hidden; background:#fff;
-  /* --safe: the parts hidden by the bin-slot lip (sides + bottom) — keep content clear */
-  padding:0 var(--safe, 3mm) var(--safe, 3mm);
+  /* keep the text clear of the full-bleed colour bars (+ the slot tab they sit in)
+     and clear of the bottom slot lip */
+  padding:0 calc(var(--barw, 14mm) + 2mm) var(--safe, 3mm);
 }
 .lbl.bordered{ border:.3mm solid var(--hair-2); border-radius:1.6mm; }
-.sc-bar{ width:4mm; flex:none; }
+/* colour bars run full-bleed to the edges (no white gap); the outer ~10mm seats in the slot */
+.sc-bar{ position:absolute; left:0; top:0; bottom:0; width:var(--barw, 14mm); }
 .sc-main{ position:relative; flex:1; min-width:0; display:flex; align-items:stretch; padding:2.4mm 2.6mm; }
 .sc-typebox{ flex:1; min-height:0; display:flex; align-items:center; justify-content:center; overflow:hidden; }
 .sc-type{
@@ -137,7 +139,7 @@ button{ font-family:inherit; cursor:pointer; }
 .sc-meta{ position:absolute; left:2.6mm; bottom:1.4mm; }
 .sc-fam{ font-size:2.5mm; font-weight:700; letter-spacing:.14em; white-space:nowrap; }
 
-.sc-stripe{ width:4mm; flex:none; align-self:stretch; }
+.sc-stripe{ position:absolute; right:0; top:0; bottom:0; width:var(--barw, 14mm); }
 /* explicit square size (~0.6 × label height) — no aspect-ratio (Safari blows that up) */
 .sc-qr{ flex:none; align-self:center; width:var(--qr); height:var(--qr); margin:0 1.5mm 0 1mm; }
 .sc-qr svg{ display:block; width:100%; height:100%; }
