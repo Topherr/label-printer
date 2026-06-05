@@ -1,5 +1,13 @@
 # Changelog
 
+## label-printer/v13
+
+- **Calibration ruler.** A new **Ruler** button swaps the preview for a printable 100 × 40 mm
+  box with millimetre graduations on all four edges (drawn as SVG, so it prints without
+  "Background graphics"). Print one page, measure with a ruler, and adjust your printer's
+  scale until it reads true-size — before committing the whole batch. Shows your current
+  label dimensions too.
+
 ## label-printer/v12
 
 - **Slot tabs + full-bleed colour bars.** Each label gains a 10mm tab on each side (the card

@@ -81,7 +81,8 @@ const el = {
   zoomLabel: $('zoomLabel'), stage: $('stage'),
 };
 
-let zoom = null; // null = fit-to-window
+let zoom = null;      // null = fit-to-window
+let calibrate = false; // true = show the printer-calibration ruler instead of labels
 
 /* ---------- state ---------- */
 function readState(){
@@ -178,6 +179,8 @@ function render(){
   const bleed = s.bleed, gap = Math.max(2, bleed * 2);
   const trimW = s.w + SLOT * 2;                 // add a slot tab on each side
   const cellW = trimW + bleed * 2, cellH = s.h + bleed * 2;
+
+  if (calibrate){ renderCalibration(s, trimW); return; }
   const cols = Math.max(1, Math.floor((PAGE_W - 2 * MARGIN + gap) / (cellW + gap)));
   const rows = Math.max(1, Math.floor((PAGE_H - 2 * MARGIN + gap) / (cellH + gap)));
   const per = cols * rows;
@@ -321,6 +324,64 @@ function fitText(box){
   code.style.fontSize = lo.toFixed(2) + 'px';
 }
 
+/* ---------- calibration ruler ---------- */
+// A true-mm 100×40 box with graduations on all four edges (SVG, so it prints as
+// foreground without needing "Background graphics"). Print it, measure with a ruler,
+// and adjust the printer's scale until it reads 100×40 mm.
+function rulerSvg(){
+  const W = 100, H = 40, pad = 13, x0 = pad, y0 = pad, x1 = x0 + W, y1 = y0 + H;
+  const sw = W + pad * 2, sh = H + pad * 2;
+  const tick = n => n % 10 ? (n % 5 ? 1.6 : 2.8) : 4.6;   // minor / mid / major length
+  const swid = n => n % 10 ? 0.18 : 0.32;
+  let lines = '', nums = '';
+  for (let x = 0; x <= W; x++){
+    const X = x0 + x, L = tick(x), w = swid(x);
+    lines += `<line x1="${X}" y1="${y0}" x2="${X}" y2="${y0 - L}" stroke-width="${w}"/>`;   // top
+    lines += `<line x1="${X}" y1="${y1}" x2="${X}" y2="${y1 + L}" stroke-width="${w}"/>`;   // bottom
+    if (!(x % 10)) nums += `<text x="${X}" y="${y0 - 5.9}" text-anchor="middle">${x}</text>`;
+  }
+  for (let y = 0; y <= H; y++){
+    const Y = y0 + y, L = tick(y), w = swid(y);
+    lines += `<line x1="${x0}" y1="${Y}" x2="${x0 - L}" y2="${Y}" stroke-width="${w}"/>`;   // left
+    lines += `<line x1="${x1}" y1="${Y}" x2="${x1 + L}" y2="${Y}" stroke-width="${w}"/>`;   // right
+    if (!(y % 10)) nums += `<text x="${x0 - 5.9}" y="${Y + 1}" text-anchor="end">${y}</text>`;
+  }
+  lines += `<rect x="${x0}" y="${y0}" width="${W}" height="${H}" fill="none" stroke-width="0.32"/>`;
+  return `<svg viewBox="0 0 ${sw} ${sh}" width="${sw}mm" height="${sh}mm" ` +
+    `font-family="'Plus Jakarta Sans',sans-serif" xmlns="http://www.w3.org/2000/svg">` +
+    `<g shape-rendering="crispEdges" stroke="#33474d">${lines}</g>` +
+    `<g fill="#0c2a30" font-size="3">${nums}</g>` +
+    `<text x="${x0 + W / 2}" y="${y1 + 9.5}" fill="#0c2a30" font-size="4.6" font-weight="700" text-anchor="middle">100 mm</text>` +
+    `<text x="${x1 + 9}" y="${y0 + H / 2}" fill="#0c2a30" font-size="4.6" font-weight="700" text-anchor="middle" transform="rotate(90 ${x1 + 9} ${y0 + H / 2})">40 mm</text>` +
+    `</svg>`;
+}
+
+function renderCalibration(s, trimW){
+  el.count.textContent = '';
+  el.perPage.textContent = 'ruler';
+  el.sheets.style.setProperty('--zoom', fitZoom());
+  el.sheets.innerHTML = '';
+  const frame = document.createElement('div');
+  frame.className = 'sheet-frame';
+  const sheet = document.createElement('div');
+  sheet.className = 'sheet cal-sheet';
+  sheet.style.cssText = `--margin:${MARGIN}mm;`;
+  const cal = document.createElement('div');
+  cal.className = 'cal';
+  cal.innerHTML =
+    `<div class="cal-title">Printer calibration</div>` +
+    rulerSvg() +
+    `<div class="cal-note">Print at <b>A4</b>, <b>Margins: None</b>, <b>Scale 100%</b> (Fit-to-page off).` +
+    ` Then measure with a ruler — the box should be exactly <b>100&nbsp;×&nbsp;40&nbsp;mm</b>.` +
+    ` If it's off, set the printer scale to <b>100&nbsp;÷&nbsp;measured&nbsp;width</b>` +
+    ` (e.g. 96&nbsp;mm&nbsp;→&nbsp;~104%) and reprint to confirm.<br>` +
+    `Your labels print at <b>${trimW}&nbsp;×&nbsp;${s.h}&nbsp;mm</b>` +
+    ` (${s.w}&nbsp;mm content + 2&nbsp;×&nbsp;${SLOT}&nbsp;mm slot tabs).</div>`;
+  sheet.appendChild(cal);
+  frame.appendChild(sheet);
+  el.sheets.appendChild(frame);
+}
+
 /* ---------- zoom ---------- */
 function fitZoom(){
   if (zoom) return zoom;
@@ -354,6 +415,11 @@ function init(){
     const w = el.w.value; el.w.value = el.h.value; el.h.value = w; render();
   });
 
+  $('calBtn').addEventListener('click', () => {
+    calibrate = !calibrate;
+    $('calBtn').classList.toggle('active', calibrate);
+    render();
+  });
   $('printBtn').addEventListener('click', () => window.print());
   $('zoomIn').addEventListener('click', () => setZoom(clamp((fitZoom()) + 0.1, 0.15, 1.5)));
   $('zoomOut').addEventListener('click', () => setZoom(clamp((fitZoom()) - 0.1, 0.15, 1.5)));

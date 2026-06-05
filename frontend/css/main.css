@@ -48,6 +48,14 @@ button{ font-family:inherit; cursor:pointer; }
 .btn.icon-only svg{ width:16px; height:16px; }
 .btn.sm{ font-size:12px; padding:6px 10px; }
 .btn:disabled{ opacity:.35; pointer-events:none; }
+.btn.ghost.active{ background:rgba(0,69,81,.1); color:var(--mountain); }
+
+/* ---------- calibration ruler page ---------- */
+.cal{ display:flex; flex-direction:column; align-items:center; gap:9mm; padding:16mm 12mm; text-align:center; }
+.cal-title{ font-size:5mm; font-weight:800; letter-spacing:-.01em; color:var(--ink); }
+.cal svg{ display:block; }
+.cal-note{ max-width:150mm; font-size:3.5mm; line-height:1.55; color:var(--ink); }
+.cal-note b{ color:var(--mountain); }
 
 /* ---------- layout ---------- */
 .layout{ flex:1; display:flex; min-height:0; align-items:stretch; }
