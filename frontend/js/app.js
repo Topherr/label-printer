@@ -49,7 +49,8 @@ function classify(line){
 const SWATCH = {
   black: '#1b1b1b', white: '#ffffff', grey: '#8a9aa0', gray: '#8a9aa0', silver: '#c4ccce',
   red: '#d12f3a', orange: '#e8821e', yellow: '#f1c40f', green: '#2e9e5b',
-  blue: '#2563eb', purple: '#7c3aed', violet: '#7c3aed', pink: '#e0529c', brown: '#8a5a2b',
+  blue: '#2563eb', aqua: '#10bed6', cyan: '#10bed6', purple: '#7c3aed', violet: '#7c3aed',
+  pink: '#e0529c', brown: '#8a5a2b',
 };
 function popColour(primary){
   const m = primary.match(/\s([a-z]+)\s*$/i);
